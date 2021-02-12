@@ -6,7 +6,7 @@
 - include_tasks: gather_facts.yml
 
 # Now loop over all subnets for the current VPC
-- include_tasks: create_vpc_subnet.yml
+- include_tasks: delete_vpc_subnet.yml
   loop_control:
     loop_var: subnet
   with_items:

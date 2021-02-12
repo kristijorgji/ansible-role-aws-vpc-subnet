@@ -1,0 +1,41 @@
+---
+
+# Assert that required vpc_filter element is present
+- name: ensure vpc_subnets array is defined correctly
+  assert:
+    that:
+      - vpc.vpc_filter is defined or vpc.vpc_name is defined
+      - not (vpc.vpc_filter is defined and vpc.vpc_name is defined)
+    msg: "aws_vpc_subnets[x].vpc_filter or .vpc_name is not defined, but required to lookup vpc"
+
+
+# Returns:
+# * _vpc_subnet_vpc
+- include_tasks: gather_facts_vpc_by_filter.yml
+  when:
+    - vpc.vpc_filter is defined
+
+
+# Returns:
+# * _vpc_subnet_vpc
+- include_tasks: gather_facts_vpc_by_name.yml
+  when:
+    - vpc.vpc_name is defined
+
+- name: fail if vpc was not found
+  assert:
+    that:
+      - _vpc_subnet_vpc.vpcs is defined
+      - _vpc_subnet_vpc.vpcs | length == 1
+    msg: Not exactly one VPC has been found
+  when: aws_vpc_subnet_state == "present"
+
+- name: set vpc id
+  set_fact:
+    aws_vpc_subnet_vpc_id: "{{ _vpc_subnet_vpc.vpcs[0].id }}"
+  when: _vpc_subnet_vpc.vpcs | length > 0
+
+- name: set vpc cidr
+  set_fact:
+    aws_vpc_subnet_vpc_cidr: "{{ _vpc_subnet_vpc.vpcs[0].cidr_block }}"
+  when: _vpc_subnet_vpc.vpcs | length > 0

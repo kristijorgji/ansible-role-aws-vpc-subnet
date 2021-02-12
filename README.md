@@ -20,6 +20,7 @@ Additional variables that can be used (either as `host_vars`/`group_vars` or via
 | `aws_vpc_subnet_profile`               | Boto profile name to be used    |
 | `aws_vpc_subnet_default_region`        | Default region to use           |
 | `aws_vpc_subnet_default_public`        | Default visibility of subnets   |
+| `aws_vpc_subnet_state`        | Default is `present`, possible values: `present` or `absent`. absent deletes the resource        |
 | `aws_vpc_subnet_vpc_filter_additional` | Additional `key` `val` filter to add to `vpc_filter` and `vpc_name` by default. |
 
 ## Example definition

@@ -11,3 +11,11 @@
     loop_var: vpc
   with_items:
     - "{{ aws_vpc_subnets }}"
+  when: aws_vpc_subnet_state == "present"
+
+- include_tasks: delete_vpc_subnets.yml
+  loop_control:
+    loop_var: vpc
+  with_items:
+    - "{{ aws_vpc_subnets }}"
+  when: aws_vpc_subnet_state == "absent"
